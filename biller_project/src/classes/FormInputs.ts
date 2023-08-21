@@ -4,6 +4,8 @@ import { HasRender } from "../interfaces/hasRender.js";
 import { Display } from "./Display.js";
 import { HasPrint } from "../interfaces/HasPrint.js";
 import { Print } from "./Print.js";
+import { bind } from "../decorators/Bind.js";
+
 
 export class FormInput {
     form: HTMLFormElement;
@@ -61,7 +63,7 @@ export class FormInput {
     //Listeners
 
     private submitFormListener(): void{
-        this.form.addEventListener('submit', this.handleFormSubmit.bind(this)); //To invoke handleFormSubmit
+        this.form.addEventListener('submit', this.handleFormSubmit); //To invoke handleFormSubmit
     }
 
     private printListener(btn: HTMLButtonElement, docContainer: HTMLDivElement){
@@ -80,13 +82,16 @@ export class FormInput {
     }
 
     private getStoredDocsListener(): void {
-        this.btnStoredInvoices.addEventListener("click", this.getItems.bind(this,'invoice'));
-        this.btnStoredEstimates.addEventListener("click", this.getItems.bind(this,'estimate'));
+        this.btnStoredInvoices.addEventListener("click", ()=> this.getItems('invoice'));
+        this.btnStoredEstimates.addEventListener("click", ()=> this.getItems('estimate'));
 
     }
     
 
     private getItems(docType: string){
+
+        console.log(this); //FormInput
+
         if(this.storedEl.hasChildNodes()){
             this.storedEl.innerHTML = "";
         }
@@ -119,8 +124,10 @@ export class FormInput {
 
     }
 
+    @bind
     private handleFormSubmit(e: Event) {
         e.preventDefault(); //To avoid page's refreshment
+        console.log(this); //FormInputs
 
         const inputs = this.inputData();
 
